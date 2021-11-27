@@ -1,29 +1,33 @@
 from PIL import Image
 import numpy as np
 
-img = Image.open("img2.jpg")
-arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
-i = 0
-while i < a:
-    j = 0
-    while j < a1:
-        s = 0
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                r = arr[n][n1][0]
-                g = arr[n][n1][1]
-                b = arr[n][n1][2]
-                M = (int(r) + int(g) + int(b)) // 3
-                s += M
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                arr[n][n1][0] = int(s // 50) * 50
-                arr[n][n1][1] = int(s // 50) * 50
-                arr[n][n1][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
-res = Image.fromarray(arr)
-res.save('res.jpg')
+
+def convert_to_grayscale(pixels_array, size_mosaic, grayscale, row_length, column_length):
+    pixels_array = pixels_array[0: row_length // size_mosaic * size_mosaic, 0: column_length // size_mosaic * size_mosaic]
+    row_index = 0
+    while row_index < row_length - (size_mosaic - 1):
+        column_index = 0
+        while column_index < column_length - (size_mosaic - 1):
+            color = 0
+            for step_row in range(row_index, row_index + size_mosaic):
+                for step_column in range(column_index, column_index + size_mosaic):
+                    color += (int(pixels_array[step_row][step_column][0])
+                              + int(pixels_array[step_row][step_column][1])
+                              + int(pixels_array[step_row][step_column][2])) // 3
+            medium_brightness = color // size_mosaic ** 2
+            for step_row in range(row_index, row_index + size_mosaic):
+                for step_column in range(column_index, column_index + size_mosaic):
+                    pixels_array[step_row][step_column][0] = (medium_brightness // grayscale) * grayscale
+                    pixels_array[step_row][step_column][1] = (medium_brightness // grayscale) * grayscale
+                    pixels_array[step_row][step_column][2] = (medium_brightness // grayscale) * grayscale
+            column_index += size_mosaic
+        row_index += size_mosaic
+    return pixels_array
+
+
+image_array = np.array(Image.open("images/img2.jpg"))
+Image.fromarray(convert_to_grayscale(image_array,
+                                    int(input("Укажите размер мозаики:")),
+                                    int(input("укажите градации серого:")),
+                                    len(image_array),
+                                    len(image_array[1]))).save('res.jpg')

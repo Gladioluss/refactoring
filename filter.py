@@ -13,7 +13,7 @@ def convert_to_grayscale(pixels_array, size_mosaic, grayscale, row_length, colum
                 color += sum(map(lambda step_column:
                                  sum(map(int, pixels_array[step_row][step_column])) // 3,
                                  range(column_index, column_index + size_mosaic)))
-                medium_brightness = ((color // size_mosaic ** 2) // grayscale) * grayscale
+            medium_brightness = ((color // size_mosaic ** 2) // grayscale) * grayscale
             for step_row in range(row_index, row_index + size_mosaic):
                 for step_column in range(column_index, column_index + size_mosaic):
                     pixels_array[step_row][step_column] = np.full(3, medium_brightness)

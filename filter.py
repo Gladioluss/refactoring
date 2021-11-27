@@ -22,7 +22,7 @@ def convert_to_grayscale(pixels_array, size_mosaic, grayscale, row_length, colum
     return pixels_array
 
 
-image_array = np.array(Image.open("img2.jpg"))
+image_array = np.array(Image.open(input("Укажите полное имя файла:  ")))
 Image.fromarray(convert_to_grayscale(image_array,
                                     int(input("Укажите размер мозаики:")),
                                     int(input("Укажите градации серого:")),
